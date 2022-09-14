@@ -752,8 +752,8 @@ function resumeInfinity (target) {
   debug(`resumeInfinity isSpeaking=${isSpeaking} isPaused=${isPaused}`)
 
   if (isSpeaking && !isPaused) {
-    // internal.speechSynthesis.pause()
-    internal.speechSynthesis.resume()
+    internal.speechSynthesis.pause()
+    setTimeout(() => internal.speechSynthesis.resume(), 100);
   }
   timeoutResumeInfinity = scope.setTimeout(function () {
     resumeInfinity(target)
