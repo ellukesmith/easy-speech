@@ -57,6 +57,8 @@ const internal = {
 
 const patches = {}
 
+let disableInfinityFix = false
+
 /*******************************************************************************
  *
  * AVAILABLE WITHOUT INIT
@@ -280,7 +282,9 @@ const status = s => {
  *      any voices embedded (example: Chromium on *buntu os')
  */
 
-EasySpeech.init = function ({ maxTimeout = 5000, interval = 250 } = {}) {
+EasySpeech.init = function ({ maxTimeout = 5000, interval = 250, forceDisableInfinityFix = false } = {}) {
+  disableInfinityFix = forceDisableInfinityFix;
+
   return new Promise((resolve, reject) => {
     if (internal.initialized) { return resolve(false) }
     EasySpeech.reset()
@@ -520,7 +524,8 @@ const validate = {
   // we prefer duck typing here, mostly because there are cases where
   // SpeechSynthesisVoice is not defined on global scope but is supported
   // when using getVoices().
-  voice: v => v && v.lang && v.name && v.voiceURI
+  voice: v => v && v.lang && v.name && v.voiceURI,
+  disableInfinityFix: d => typeof d === 'boolean'
 }
 
 /**
@@ -736,6 +741,10 @@ let timeoutResumeInfinity
  * @param target
  */
 function resumeInfinity (target) {
+  if (internal.defaults?.disableInfinityFix) {
+    return
+  }
+
   // prevent memory-leak in case utterance is deleted, while this is ongoing
   if (!target && timeoutResumeInfinity) {
     debug('force-clear timeout')
