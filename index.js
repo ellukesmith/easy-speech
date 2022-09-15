@@ -524,8 +524,7 @@ const validate = {
   // we prefer duck typing here, mostly because there are cases where
   // SpeechSynthesisVoice is not defined on global scope but is supported
   // when using getVoices().
-  voice: v => v && v.lang && v.name && v.voiceURI,
-  disableInfinityFix: d => typeof d === 'boolean'
+  voice: v => v && v.lang && v.name && v.voiceURI
 }
 
 /**
@@ -741,7 +740,7 @@ let timeoutResumeInfinity
  * @param target
  */
 function resumeInfinity (target) {
-  if (internal.defaults?.disableInfinityFix) {
+  if (disableInfinityFix) {
     return
   }
 
